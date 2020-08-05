@@ -46,7 +46,7 @@ repositories {
 
 dependencies {
     compile "curse.maven:advanced-solar-panels:2652182"
-    compile "net.industrial-craft:industrialcraft-2:2.8.216-ex112:dev"
+    compile "net.industrial-craft:industrialcraft-2:2.8.220-ex112:dev"
 }
 
 jar {
