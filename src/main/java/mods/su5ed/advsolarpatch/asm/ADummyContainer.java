@@ -17,7 +17,7 @@ public class ADummyContainer extends DummyModContainer {
         meta.name = "AdvSolarPatchCoreMod";
         meta.version = "1.0";
         meta.authorList = Collections.singletonList("Su5eD");
-        meta.description = "A coremod that fixed AdvSolarPanels crash with newer ic2 builds";
+        meta.description = "A coremod that fixes AdvSolarPanels crashing with newer ic2 builds";
     }
 
     @Override
