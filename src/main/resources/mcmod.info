@@ -1,7 +1,7 @@
 [
 {
   "modid": "advsolarpatch",
-  "name": "Advanced Solars Patch",
+  "name": "Advanced Solar Machines Patcher",
   "description": "Patches Advanced Solar Panels to work with newer ic2 builds",
   "version": "${version}",
   "mcversion": "${mcversion}",
