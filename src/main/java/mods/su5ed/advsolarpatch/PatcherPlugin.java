@@ -1,4 +1,4 @@
-package mods.su5ed.advsolarpatch.asm;
+package mods.su5ed.advsolarpatch;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -7,15 +7,15 @@ import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.TransformerExclusions("mods.su5ed.advsolarpatch.asm")
-public class AFMLLoadingPlugin implements IFMLLoadingPlugin {
+public class PatcherPlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { AClassTransformer.class.getName() };
+        return new String[] { ClassTransformer.class.getName() };
     }
 
     @Override
     public String getModContainerClass() {
-        return ADummyContainer.class.getName();
+        return PluginModContainer.class.getName();
     }
 
     @Nullable

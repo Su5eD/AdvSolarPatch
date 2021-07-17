@@ -1,0 +1,17 @@
+[
+{
+  "modid": "advsolarpatch",
+  "name": "Advanced Solar Panels Patcher",
+  "description": "Patches several issues in Advanced Solar Panels",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/advanced-solar-panels-patcher",
+  "updateUrl": "",
+  "authorList": ["Su5eD"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "requiredMods": [ "advanced_solar_panels" ],
+  "dependencies": [ "advanced_solar_panels@[4.3.0,)" ]
+}
+]
