@@ -27,7 +27,7 @@ public class PluginModContainer extends DummyModContainer {
     }
     
     private static ModMetadata getModMetadata() {
-        MetadataCollection metadata = MetadataCollection.from(PluginModContainer.class.getResourceAsStream("/advsolarpatch.info"), "AdvSolarPatch");
+        MetadataCollection metadata = MetadataCollection.from(PluginModContainer.class.getResourceAsStream("/mcmod.info"), "AdvSolarPatch");
         return metadata.getMetadataForId("advsolarpatch", null);
     }
 
