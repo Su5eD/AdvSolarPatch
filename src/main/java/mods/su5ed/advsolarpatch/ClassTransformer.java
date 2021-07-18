@@ -19,6 +19,7 @@ public class ClassTransformer implements IClassTransformer {
         TRANSFORMERS.put("com.chocohead.advsolar.tiles.TileEntityMolecularAssembler$1", InvSlotProcessableVisitor::new);
         TRANSFORMERS.put("com.chocohead.advsolar.tiles.TileEntityMolecularAssembler", MolecularAssemblerVisitor::new);
         TRANSFORMERS.put("com.chocohead.advsolar.slots.InvSlotMultiCharge", InvSlotMultiChargeVisitor::new);
+        TRANSFORMERS.put("com.chocohead.advsolar.items.ItemDoubleSlab", ItemDoubleSlabVisitor::new);
     }
     
     @Override
@@ -125,6 +126,55 @@ public class ClassTransformer implements IClassTransformer {
                         && !itf) {
                     super.visitMethodInsn(opcode, owner, name, desc.replace("ic2/core/block/TileEntityInventory", "ic2/core/block/IInventorySlotHolder"), false);
                 } else super.visitMethodInsn(opcode, owner, name, desc, itf);
+            }
+        }
+    }
+    
+    private static class ItemDoubleSlabVisitor extends ClassVisitor {
+
+        public ItemDoubleSlabVisitor(int api, ClassVisitor cv) {
+            super(api, cv);
+        }
+
+        @Override
+        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+            return new ItemDoubleSlabMethodVisitor(ASM4, super.visitMethod(access, name, desc, signature, exceptions));
+        }
+        
+        private static class ItemDoubleSlabMethodVisitor extends MethodVisitor {
+            private boolean replaceInsn;
+            
+            public ItemDoubleSlabMethodVisitor(int api, MethodVisitor mv) {
+                super(api, mv);
+            }
+
+            @Override
+            public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+                if (opcode == INVOKEVIRTUAL 
+                        && owner.equals("net/minecraft/entity/player/EntityPlayer") 
+                        && name.equals("canPlayerEdit") 
+                        && desc.equals("(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;Lnet/minecraft/item/ItemStack;)Z") 
+                        && !itf) {
+                    replaceInsn = true;
+                }
+                else if (opcode == INVOKEVIRTUAL 
+                        && owner.equals("net/minecraft/item/ItemStack") 
+                        && name.equals("getMetadata") 
+                        && desc.equals("()I") 
+                        && !itf) {
+                    replaceInsn = false;
+                }
+                
+                super.visitMethodInsn(opcode, owner, name, desc, itf);
+            }
+
+            @Override
+            public void visitVarInsn(int opcode, int var) {
+                if (replaceInsn && opcode == ALOAD && var == 10) {
+                    visitVarInsn(ALOAD, 0);
+                    visitFieldInsn(GETFIELD, "net/minecraft/item/ItemBlock", "block", "Lnet/minecraft/block/Block;");
+                }
+                else super.visitVarInsn(opcode, var);
             }
         }
     }
