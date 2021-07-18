@@ -1,6 +1,7 @@
 package mods.su5ed.advsolarpatch;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.Launch;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -131,9 +132,18 @@ public class ClassTransformer implements IClassTransformer {
     }
     
     private static class ItemDoubleSlabVisitor extends ClassVisitor {
+        private final String methodCanPlayerEditName;
+        private final String methodGetMetadataName;
+        private final String fieldBlock;
 
         public ItemDoubleSlabVisitor(int api, ClassVisitor cv) {
             super(api, cv);
+            
+            boolean deobf = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+            
+            this.methodCanPlayerEditName = deobf ? "canPlayerEdit" : "func_175151_a";
+            this.methodGetMetadataName = deobf ? "getMetadata" : "func_77960_j";
+            this.fieldBlock = deobf ? "block" : "field_150939_a";
         }
 
         @Override
@@ -141,7 +151,7 @@ public class ClassTransformer implements IClassTransformer {
             return new ItemDoubleSlabMethodVisitor(ASM4, super.visitMethod(access, name, desc, signature, exceptions));
         }
         
-        private static class ItemDoubleSlabMethodVisitor extends MethodVisitor {
+        private class ItemDoubleSlabMethodVisitor extends MethodVisitor {
             private boolean replaceInsn;
             
             public ItemDoubleSlabMethodVisitor(int api, MethodVisitor mv) {
@@ -152,14 +162,14 @@ public class ClassTransformer implements IClassTransformer {
             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                 if (opcode == INVOKEVIRTUAL 
                         && owner.equals("net/minecraft/entity/player/EntityPlayer") 
-                        && name.equals("canPlayerEdit") 
+                        && name.equals(methodCanPlayerEditName) 
                         && desc.equals("(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;Lnet/minecraft/item/ItemStack;)Z") 
                         && !itf) {
                     replaceInsn = true;
                 }
                 else if (opcode == INVOKEVIRTUAL 
                         && owner.equals("net/minecraft/item/ItemStack") 
-                        && name.equals("getMetadata") 
+                        && name.equals(methodGetMetadataName) 
                         && desc.equals("()I") 
                         && !itf) {
                     replaceInsn = false;
@@ -172,7 +182,7 @@ public class ClassTransformer implements IClassTransformer {
             public void visitVarInsn(int opcode, int var) {
                 if (replaceInsn && opcode == ALOAD && var == 10) {
                     visitVarInsn(ALOAD, 0);
-                    visitFieldInsn(GETFIELD, "net/minecraft/item/ItemBlock", "block", "Lnet/minecraft/block/Block;");
+                    visitFieldInsn(GETFIELD, "net/minecraft/item/ItemBlock", fieldBlock, "Lnet/minecraft/block/Block;");
                 }
                 else super.visitVarInsn(opcode, var);
             }
