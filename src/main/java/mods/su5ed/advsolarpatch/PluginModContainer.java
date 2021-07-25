@@ -6,7 +6,9 @@ import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.MetadataCollection;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,10 @@ public class PluginModContainer extends DummyModContainer {
     }
     
     private static ModMetadata getModMetadata() {
-        MetadataCollection metadata = MetadataCollection.from(PluginModContainer.class.getResourceAsStream("/mcmod.info"), "AdvSolarPatch");
+        InputStream is = PluginModContainer.class.getClassLoader().getResourceAsStream("advsolarpatch.info");
+        if (is == null) throw new RuntimeException("Couldn't find mod metadata file");
+        
+        MetadataCollection metadata = MetadataCollection.from(is, "AdvSolarPatch");
         return metadata.getMetadataForId("advsolarpatch", null);
     }
 

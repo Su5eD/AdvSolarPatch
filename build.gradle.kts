@@ -13,7 +13,7 @@ plugins {
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 
-version = "1.2"
+version = "1.2.1"
 group = "mods.su5ed"
 
 val coremodPath: String by project
@@ -81,7 +81,7 @@ tasks {
     processResources {
         inputs.property("version", project.version)
         
-        filesMatching("mcmod.info") {
+        filesMatching("advsolarpatch.info") {
             expand(
                 "version" to project.version,
                 "mcversion" to "1.12.2"
